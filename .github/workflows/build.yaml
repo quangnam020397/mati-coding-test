@@ -10,9 +10,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: print
-        run: echo ${{ secrets.HOST }} - ${{ secrets.USERNAME }} - ${{ secrets.PORT }} - ${{ secrets.SSHKEY }}
-
       # gen build number
       - name: Generate build number
         id: buildnumber
