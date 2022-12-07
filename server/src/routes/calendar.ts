@@ -8,3 +8,5 @@ router.get("/", (request, response) => {
 
   return response.json({ message: "Hello World!" });
 });
+
+export default router;
