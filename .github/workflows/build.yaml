@@ -1,4 +1,4 @@
-name: fazz-interview
+name: mati-interview
 on:
   push:
     branches: [dev]
@@ -44,7 +44,7 @@ jobs:
           file: ./docker/Dockerfile.fe
           builder: ${{ steps.buildx.output.name }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:fazz-interview.fe.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:fazz-interview.fe.latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.fe.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.fe.latest
 
       - name: build and push docker images be
         uses: docker/build-push-action@v2
@@ -54,7 +54,7 @@ jobs:
           file: ./docker/Dockerfile.be
           builder: ${{ steps.buildx.output.name }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:fazz-interview.be.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:fazz-interview.be.latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.be.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.be.latest
 
       # verify docker images
       - name: Verify
@@ -69,5 +69,5 @@ jobs:
           PORT: ${{ secrets.PORT }}
           KEY: ${{ secrets.SSHKEY }}
           script: |
-            cd /home/kevin/docker/fazz
+            cd /home/kevin/docker/mati
             sh redeploy.sh
