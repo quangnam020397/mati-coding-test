@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yarn build
+yarn build:staging
 
 # print current directory
 pwd
