@@ -1,0 +1,11 @@
+.drag__item {
+    @apply h-6 bg-violet-600 my-4 cursor-move;
+}
+
+.dragItem {
+    @apply h-24 bg-violet-600 my-4 cursor-move opacity-100;
+}
+
+.dragging {
+    @apply bg-violet-400 opacity-50;
+}

@@ -1,0 +1,31 @@
+:root body.light {
+  --color: #213547;
+  --background-color: #ffffff;
+
+  --color-scheme: light;
+  --color-scheme-background: dark;
+
+  --primary: #1e88e5;
+  --primary-variant: #1976d2;
+  --secondary: #ff9800;
+  --secondary-variant: #f57c00;
+  --error: #f44336;
+  --on-primary: #ffffff;
+  --on-secondary: #000000;
+  --on-error: #ffffff;
+  --on-background: #000000;
+  --on-surface: #000000;
+}
+
+:root body.dark {
+  --color: #ffffff;
+  --background-color: #213547;
+
+  --color-scheme: dark;
+  --color-scheme-background: light;
+
+  --primary: #1e88e5;
+  --primary-variant: #1976d2;
+  --secondary: #ff9800;
+  --secondary-variant: #f57c00;
+}
