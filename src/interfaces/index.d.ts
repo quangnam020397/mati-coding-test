@@ -22,3 +22,26 @@ export interface IItemData {
   description: string;
   index: number;
 }
+
+
+export type axiosContentType = 'multipart/form-data'| 'application/json';
+
+
+// export type TReqLogin = {
+//   username: string;
+//   password: string;
+// };
+
+export type TResData<T> = {
+  data: T;
+  status: number;
+  isSuccess: boolean;
+};
+
+// export interface ILoginResponse {
+//   infoUser: any;
+//   token: string;
+//   success: boolean;
+// }
+
+// // export type T
