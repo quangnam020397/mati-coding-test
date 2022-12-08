@@ -1,15 +1,33 @@
 .title {
-    @apply text-2xl font-bold flex flex-col justify-center;
-
-    >* {
-        @apply text-center;
-    }
+    @apply text-xl font-bold text-gray-400 pt-2 pb-1 pl-2;
 }
 
 .container {
-    @apply flex flex-col p-1 border border-slate-400 bg-slate-100;
+    @apply flex flex-col p-1 bg-slate-100 shadow-slate-100 rounded-2xl;
 }
 
-.item {
-    
+
+.collection__title {
+    @apply text-lg font-bold px-2 py-2.5 truncate text-purple-600;
+}
+
+
+
+
+
+.exercise__title {
+    @apply text-lg font-bold px-2 pt-2.5 truncate;
+}
+
+.exercise__content {
+    @apply flex justify-start px-2;
+
+    div:first-child {
+        @apply text-base font-bold text-gray-400 px-1;
+    }
+
+    div:last-child {
+        @apply text-base font-light text-gray-400 px-1 truncate;
+    }
+
 }

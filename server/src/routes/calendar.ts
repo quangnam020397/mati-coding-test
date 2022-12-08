@@ -4,7 +4,9 @@ const router = Router();
 
 router.get("/", (request, response) => {
   // get date range from query params
-  const { start, end } = request.query;
+  const { from, to } = request.query;
+
+  console.log(from, to);
 
   return response.json({ message: "Hello World!" });
 });

@@ -1,5 +1,5 @@
 .container {
-    @apply h-full mt-10;
+    @apply h-full mt-10 bg-white;
 
     &>* {
         @apply w-full;

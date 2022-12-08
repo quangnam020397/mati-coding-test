@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { DATE_TIME_FORMAT } from '../constants';
 import { IDataWeekly } from '../interfaces';
 import { formatDate, generateId } from '../utils';
+import useCalendarQuery from './useCalendarQuery';
 
 export interface useDataWeeklyProps {
   days: Dayjs[];
@@ -10,6 +11,11 @@ export interface useDataWeeklyProps {
 
 const useDataWeekly = ({ days }: useDataWeeklyProps) => {
   const [data, setData] = useState<IDataWeekly[]>([]);
+
+  const { data: dataApi, isLoading } = useCalendarQuery({
+    from: days[0],
+    to: days[days.length - 1],
+  });
 
   useEffect(() => {
     const _data = days.map((item, index) => {
@@ -19,13 +25,18 @@ const useDataWeekly = ({ days }: useDataWeeklyProps) => {
         day: item,
         collections: Array.from({ length: quantityCollection }, (_, i) => {
           const quantityItem = Math.floor(Math.random() * 6) + 1;
+          const collectionName = `Collection ${item.format('DD-MM')} ${i} ${generateId(10)}`;
           return {
             id: generateId(),
-            name: `Collection ${item.format('DD-MM')} ${i}`,
+            name: collectionName,
+            index: i,
             items: Array.from({ length: quantityItem }, (_, i) => {
               return {
                 id: generateId(),
-                name: `Item ${i}`,
+                name: collectionName + ` Item ${i}`,
+                quantity: Math.floor(Math.random() * 100) + 1,
+                description: `Description ${collectionName} ${i}`,
+                index: i,
               };
             }),
           };

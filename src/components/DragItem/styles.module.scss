@@ -1,9 +1,5 @@
-.drag__item {
-    @apply h-6 bg-violet-600 my-4 cursor-move;
-}
-
 .dragItem {
-    @apply h-24 bg-violet-600 my-4 cursor-move opacity-100;
+    @apply bg-slate-50 my-2 mx-1 cursor-pointer opacity-100;
 }
 
 .dragging {

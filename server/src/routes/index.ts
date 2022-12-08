@@ -6,7 +6,7 @@ import calendarRouter from './calendar';
 
 const router = Router();
 
-router.get('/', authenticate, (request, response) => {
+router.get('/', (request, response) => {
   return response.json({ message: 'Hello World!' });
 });
 

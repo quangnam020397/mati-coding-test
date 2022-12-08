@@ -38,3 +38,23 @@ body,
 #root {
   overflow: auto;
 }
+
+.ant-card .ant-card-body,
+.ant-card .ant-card-head,
+.ant-card .ant-card-head-title {
+  padding: 0;
+}
+
+.ant-modal-footer {
+  display        : flex;
+  justify-content: flex-end;
+
+  >* {
+    margin: 0 0.5rem;
+  }
+}
+
+.ant-btn-primary {
+  background-color: #1e88e5;
+  border-color    : #1e88e5;
+}

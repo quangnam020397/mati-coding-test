@@ -1,51 +1,53 @@
 import { useCallback, useState } from 'react';
 import { ICollectionData, IDataWeekly, IItemData } from '../interfaces';
 
-const useDragDrop = (setData: React.Dispatch<React.SetStateAction<IDataWeekly[]>>) => {
-  const [dragItemIndex, setDragItemIndex] = useState<number | null>(null);
-  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
-  const [dragCollectionId, setDragCollectionId] = useState<string | null>(null);
-  const [dragOverCollectionId, setDragOverCollectionId] = useState<string | null>(null);
+const dataDragDrop: {
+  dragItemIndex: null | number;
+  dragOverItemIndex: null | number;
+  dragCollectionId: null | string;
+  dragOverCollectionId: null | string;
+} = {
+  dragItemIndex: null,
+  dragOverItemIndex: null,
+  dragCollectionId: null,
+  dragOverCollectionId: null,
+};
 
-  const handleDragStart = useCallback(
-    (index: number, collectionId: string) => {
-      console.log({ index, collectionId });
-      setDragItemIndex(index);
-      setDragCollectionId(collectionId);
-    },
-    [setDragItemIndex, setDragCollectionId],
-  );
+const useDragDrop = (setData: React.Dispatch<React.SetStateAction<IDataWeekly[]>>) => {
+
+  const handleDragStart = useCallback((index: number, collectionId: string) => {
+    dataDragDrop.dragItemIndex = index;
+    dataDragDrop.dragCollectionId = collectionId;
+  }, []);
 
   const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   }, []);
 
   const handleDrop = useCallback(() => {
-    console.log({
-      dragItemIndex,
-      dragOverItemIndex,
-      dragCollectionId,
-      dragOverCollectionId,
-    });
-
     if (!setData) {
       return;
     }
 
     if (
-      dragItemIndex === null ||
-      dragOverItemIndex === null ||
-      dragCollectionId === null ||
-      dragOverCollectionId === null
+      dataDragDrop.dragItemIndex === null ||
+      dataDragDrop.dragOverItemIndex === null ||
+      dataDragDrop.dragCollectionId === null ||
+      dataDragDrop.dragOverCollectionId === null
     ) {
       return;
     }
 
-    if (dragCollectionId === dragOverCollectionId) {
+    if (
+      dataDragDrop.dragItemIndex === dataDragDrop.dragOverItemIndex &&
+      dataDragDrop.dragCollectionId === dataDragDrop.dragOverCollectionId
+    ) {
+      return;
+    } else if (dataDragDrop.dragCollectionId === dataDragDrop.dragOverCollectionId) {
       setData((preData: IDataWeekly[]) => {
         const _data = [...preData];
         // find collection
-        const { collection, dayIndex } = findCollectionById(_data, dragCollectionId);
+        const { collection } = findCollectionById(_data, dataDragDrop.dragCollectionId!);
 
         if (!collection) {
           return _data;
@@ -57,18 +59,34 @@ const useDragDrop = (setData: React.Dispatch<React.SetStateAction<IDataWeekly[]>
       });
     } else {
       setData((prevData: any) => {
-        // resort data after drop
-        const data = [...prevData];
-        if (dragItemIndex !== null && dragOverItemIndex !== null) {
-          const dragItem = data[dragItemIndex!];
-          data.splice(dragItemIndex!, 1);
-          data.splice(dragOverItemIndex!, 0, dragItem);
+        const _data = [...prevData];
+
+        // find collection by dragCollectionId
+        const { collection: sourceCollection } = findCollectionById(_data, dataDragDrop.dragCollectionId!);
+
+        // find collection by dragOverCollectionId
+        const { collection: targetCollection } = findCollectionById(_data, dataDragDrop.dragOverCollectionId!);
+
+        if (!sourceCollection || !targetCollection) {
+          return _data;
         }
 
-        return data;
+        // remove item from source collection by dragItemIndex
+        const dragItem = sourceCollection.items[dataDragDrop.dragItemIndex!];
+
+        if (!dragItem) {
+          return _data;
+        }
+
+        sourceCollection.items.splice(dataDragDrop.dragItemIndex!, 1);
+
+        // add item to target collection by dragOverItemIndex
+        targetCollection.items.splice(dataDragDrop.dragOverItemIndex!, 0, dragItem);
+
+        return _data;
       });
     }
-  }, [dragItemIndex, dragOverItemIndex, dragCollectionId, dragOverCollectionId]);
+  }, []);
 
   const findCollectionById = useCallback(
     (data: IDataWeekly[], collectionId: string): { dayIndex: number; collection: ICollectionData } => {
@@ -81,66 +99,86 @@ const useDragDrop = (setData: React.Dispatch<React.SetStateAction<IDataWeekly[]>
     [],
   );
 
-  const reSortDataSameCollection = useCallback(
-    (prevData: any) => {
-      const data = [...prevData];
-      if (dragItemIndex !== null && dragOverItemIndex !== null) {
-        const dragItem = data[dragItemIndex!];
-        data.splice(dragItemIndex!, 1);
-        data.splice(dragOverItemIndex!, 0, dragItem);
-      }
+  const reSortDataSameCollection = useCallback((prevData: any) => {
+    const data = [...prevData];
+    if (dataDragDrop.dragItemIndex !== null && dataDragDrop.dragOverItemIndex !== null) {
+      const dragItem = data[dataDragDrop.dragItemIndex];
+      data.splice(dataDragDrop.dragItemIndex!, 1);
+      data.splice(dataDragDrop.dragOverItemIndex!, 0, dragItem);
+    }
 
-      return data;
-    },
-    [dragItemIndex, dragOverItemIndex],
-  );
+    return data;
+  }, []);
 
-  const handleDragEnter = useCallback(
-    (index: number) => {
-      console.log('drag enter', index);
-      setDragOverItemIndex(index);
-    },
-    [setDragOverItemIndex],
-  );
+  const handleDragEnter = useCallback((index: number) => {
+    dataDragDrop.dragOverItemIndex = index;
+  }, []);
 
-  const handleDragLeave = useCallback(
-    (event: any) => {
-      console.log('drag leave', event);
-      setDragOverItemIndex(null);
-    },
-    [setDragOverItemIndex],
-  );
+  const handleDragLeave = useCallback((event: any) => {
+    dataDragDrop.dragOverItemIndex = null;
+  }, []);
 
-  const handleDragEnd = useCallback(
-    (event: any) => {
-      console.log('drag end');
-      setDragItemIndex(null);
-      setDragOverItemIndex(null);
+  const handleDragEnd = useCallback((event: any) => {
+    dataDragDrop.dragItemIndex = null;
+    dataDragDrop.dragOverItemIndex = null;
 
-      // card
-      setDragCollectionId(null);
-      setDragOverCollectionId(null);
-    },
-    [setDragItemIndex, setDragOverItemIndex, setDragCollectionId, setDragOverCollectionId],
-  );
+    // card
+    dataDragDrop.dragCollectionId = null;
+    dataDragDrop.dragOverCollectionId = null;
+  }, []);
 
   // card data
 
-  const handleDragOverCard = useCallback(
-    (e: any, item: ICollectionData) => {
-      e.preventDefault();
-      console.log('drag over card', item.id);
-      setDragOverCollectionId(item.id);
+  const handleDragOverCard = useCallback((e: any, item: ICollectionData) => {
+    e.preventDefault();
 
-      console.log({
-        dragItemIndex,
-        dragOverItemIndex,
-        dragCollectionId,
-        dragOverCollectionId,
+    dataDragDrop.dragOverCollectionId = item.id;
+  }, []);
+
+  const handleDropToCard = useCallback((e: any, collection: ICollectionData) => {
+    e.preventDefault();
+
+    if (!setData) {
+      return;
+    }
+
+    if (!collection.items.length) {
+      if (
+        dataDragDrop.dragItemIndex === null ||
+        dataDragDrop.dragCollectionId === null ||
+        dataDragDrop.dragOverCollectionId === null
+      ) {
+        return;
+      }
+      setData((prevData: any) => {
+        const _data = [...prevData];
+
+        // find collection by dragCollectionId
+        const { collection: sourceCollection } = findCollectionById(_data, dataDragDrop.dragCollectionId!);
+
+        // find collection by dragOverCollectionId
+        const { collection: targetCollection } = findCollectionById(_data, dataDragDrop.dragOverCollectionId!);
+
+        if (!sourceCollection || !targetCollection) {
+          return _data;
+        }
+
+        // remove item from source collection by dragItemIndex
+        const dragItem = sourceCollection.items[dataDragDrop.dragItemIndex!];
+
+        if (!dragItem) {
+          return _data;
+        }
+
+        sourceCollection.items.splice(dataDragDrop.dragItemIndex!, 1);
+
+        // add item to target collection by dragOverItemIndex
+        targetCollection.items.push(dragItem);
+
+        return _data;
       });
-    },
-    [setDragOverCollectionId],
-  );
+    }
+  }, []);
 
   return {
     handleDragStart,
@@ -150,6 +188,8 @@ const useDragDrop = (setData: React.Dispatch<React.SetStateAction<IDataWeekly[]>
     handleDragLeave,
     handleDragEnd,
     handleDragOverCard,
+    handleDropToCard,
+
   };
 };
 

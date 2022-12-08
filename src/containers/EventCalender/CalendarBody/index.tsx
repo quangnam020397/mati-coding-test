@@ -1,4 +1,3 @@
-import { Dayjs } from 'dayjs';
 import { IDataWeekly } from '../../../interfaces';
 import ColumnDay from '../components/ColumnDay';
 import styles from './styles.module.scss';

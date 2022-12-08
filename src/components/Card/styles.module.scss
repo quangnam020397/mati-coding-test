@@ -1,10 +1,14 @@
 .card__with__title {
-    background-color: #fff;
-    :first-child>div>div {
-        @apply py-2 px-4 ;
-    }
+@apply bg-white px-2;
+
+
+    // &:first-child>div>div>div {
+    //     @apply py-2 px-4;
+    // }
 }
 
 .card__non__title {
-
+    // &:first-child>div>div {
+    //     @apply py-0 px-1;
+    // }
 }

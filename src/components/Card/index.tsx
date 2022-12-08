@@ -10,7 +10,7 @@ function Card({
 }: CardProps) {
   return (
     <CardAntd
-      className={`${title ? styles.card__with__title : styles.card__non__title} ${className}`}
+      className={`${!!title ? styles.card__with__title : styles.card__non__title} ${className}`}
       title={title}
       {...props}
     >
