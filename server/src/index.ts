@@ -9,6 +9,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import cors from 'cors';
 import { server } from './config';
 import fs from 'fs';
+import logger from './middlewares/logger';
 
 // setup body parser
 
@@ -27,8 +28,13 @@ const swaggerDocument = JSON.parse(swaggerData);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// use logger middleware for any request
+app.use(logger);
+
 app.use('/api/v1', router);
 
 app.listen(server.port, server.host, () => {
   console.log(`Server is running on port ${server.port}`);
 });
+
+export default app;
