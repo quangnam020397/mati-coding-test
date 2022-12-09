@@ -23,7 +23,7 @@ yarn install
 
 ### 2. `Running dev enviroment.`
 
-##### Running
+##### Running locally
 
 If your had running **Back end** application let run
 
@@ -57,6 +57,16 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://vitejs.dev/guide/build.html#public-base-path) for more information.
 
+### 4. `Run test`
+
+```bash
+yarn test
+```
+
+to watch test on the UI 
+```bash
+yarn test:ui
+```
 ## Technical
 
 Tecnical core on project using:
