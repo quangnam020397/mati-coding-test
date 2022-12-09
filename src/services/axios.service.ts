@@ -7,6 +7,10 @@ class AxiosService {
   private axios: AxiosInstance;
   private axiosConfig!: AxiosRequestConfig;
   private logger = loggerService;
+
+  private apiDomain = import.meta.env.VITE_API_DOMAIN;
+  private prefix = import.meta.env.VITE_API_PREFIX;
+
   constructor() {
     this.axios = Axios.create({
       baseURL: this.getBaseUrl(),
@@ -15,7 +19,13 @@ class AxiosService {
   }
 
   private getBaseUrl(): string {
-    return 'http://localhost:3333/api/v1';
+
+    // get base url from env
+    if (this.apiDomain && this.prefix) {
+      return `${this.apiDomain}${this.prefix}`;
+    }
+    
+    return '/';
   }
 
   getAxiosConfig = (): void => {
@@ -68,7 +78,7 @@ class AxiosService {
       method
         .then((res: any) => {
           resolve({
-            data: res.data,
+            data: res.data.data,
             status: res.status,
             isSuccess: true,
           });

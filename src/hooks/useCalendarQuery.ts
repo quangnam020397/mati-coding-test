@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
+import { ICollectionData, IWeeklyData } from '../interfaces';
 import axiosService from '../services/axios.service';
 
 interface ICalendarProps {
@@ -9,7 +10,7 @@ interface ICalendarProps {
 
 const useCalendarQuery = ({ from, to }: ICalendarProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ICollectionData[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -20,7 +21,7 @@ const useCalendarQuery = ({ from, to }: ICalendarProps) => {
         to: to.toISOString(),
       };
 
-      const result = await axiosService.getMethod<any[]>('/calendar', params);
+      const result = await axiosService.getMethod<ICollectionData[]>('/calendar', params);
       setData(result.data);
       setIsLoading(false);
     };

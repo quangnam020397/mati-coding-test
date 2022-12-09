@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { DATE_TIME_FORMAT } from '../constants';
-import { IDataWeekly } from '../interfaces';
+import { ICollectionData, IDataWeekly } from '../interfaces';
 import { formatDate, generateId } from '../utils';
 import useCalendarQuery from './useCalendarQuery';
 
@@ -18,34 +18,22 @@ const useDataWeekly = ({ days }: useDataWeeklyProps) => {
   });
 
   useEffect(() => {
-    const _data = days.map((item, index) => {
-      const quantityCollection = Math.floor(Math.random() * 6) + 1;
+    // transform dataApi to data
+    const dataApiTransformed: IDataWeekly[] = days.map((day) => {
+      const collections = dataApi.filter((collection) => {
+        const date = dayjs(collection.date);
+        return date.isSame(day, 'day');
+      });
+
       return {
         id: generateId(),
-        day: item,
-        collections: Array.from({ length: quantityCollection }, (_, i) => {
-          const quantityItem = Math.floor(Math.random() * 6) + 1;
-          const collectionName = `Collection ${item.format('DD-MM')} ${i} ${generateId(10)}`;
-          return {
-            id: generateId(),
-            name: collectionName,
-            index: i,
-            items: Array.from({ length: quantityItem }, (_, i) => {
-              return {
-                id: generateId(),
-                name: collectionName + ` Item ${i}`,
-                quantity: Math.floor(Math.random() * 100) + 1,
-                description: `Description ${collectionName} ${i}`,
-                index: i,
-              };
-            }),
-          };
-        }),
+        day: day,
+        collections,
       };
     });
 
-    setData(_data);
-  }, [days]);
+    setData(dataApiTransformed);
+  }, [dataApi]);
 
   return { data, setData };
 };

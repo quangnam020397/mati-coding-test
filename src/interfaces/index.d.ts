@@ -11,8 +11,9 @@ export interface IDataWeekly {
 export interface ICollectionData {
   id: string;
   name: string;
-  items: IItemData[];
   index: number;
+  date: Date;
+  items: IItemData[];
 }
 
 export interface IItemData {
@@ -23,9 +24,7 @@ export interface IItemData {
   index: number;
 }
 
-
-export type axiosContentType = 'multipart/form-data'| 'application/json';
-
+export type axiosContentType = 'multipart/form-data' | 'application/json';
 
 // export type TReqLogin = {
 //   username: string;
