@@ -1,0 +1,7 @@
+.dragItem {
+    @apply bg-slate-50 my-2 mx-1 cursor-pointer opacity-100;
+}
+
+.dragging {
+    @apply bg-violet-400 opacity-50;
+}

@@ -1,0 +1,73 @@
+name: mati-interview
+on:
+  push:
+    branches: [dev]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout repo to master
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # gen build number
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
+
+      # login docker hub
+      - name: Login docker hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_SECRETS }}
+
+      # setup docker build
+      - name: setup docker Buildx
+        uses: docker/setup-buildx-action@v1
+        id: buildx
+
+      - name: prepare build
+        run: sh scripts/prepare.sh
+
+      - name: run build
+        run: sh scripts/build.sh
+
+      # build and push docker image
+      - name: build and push docker images fe
+        uses: docker/build-push-action@v2
+        id: docker_build_fe
+        with:
+          context: ./
+          file: ./docker/Dockerfile.fe
+          builder: ${{ steps.buildx.output.name }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.fe.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.fe.latest
+
+      - name: build and push docker images be
+        uses: docker/build-push-action@v2
+        id: docker_build_be
+        with:
+          context: ./
+          file: ./docker/Dockerfile.be
+          builder: ${{ steps.buildx.output.name }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.be.${{ steps.buildnumber.outputs.build_number }} , ${{ secrets.DOCKERHUB_USERNAME }}/images:mati-interview.be.latest
+
+      # verify docker images
+      - name: Verify
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      # redeploy to vps use ssh action
+      - name: Executing remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PORT: ${{ secrets.PORT }}
+          KEY: ${{ secrets.SSHKEY }}
+          script: |
+            cd /home/kevin/docker/mati
+            sh redeploy.sh

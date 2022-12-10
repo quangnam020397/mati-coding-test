@@ -1,0 +1,7 @@
+.container {
+    @apply p-8;
+
+    .calendar {
+        @apply grid grid-cols-7 gap-4 h-full;
+    }
+}

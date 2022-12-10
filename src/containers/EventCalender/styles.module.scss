@@ -1,0 +1,19 @@
+.container {
+    @apply h-full mt-10 bg-white;
+
+    &>* {
+        @apply w-full;
+    }
+
+    .header {
+        @apply fixed top-0 z-10 left-0
+    }
+
+    .body {
+        @apply grow;
+
+        >* {
+            @apply w-full h-full;
+        }
+    }
+}
