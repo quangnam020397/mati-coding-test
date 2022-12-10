@@ -33,7 +33,7 @@ app.use(logger);
 
 app.use('/api/v1', router);
 
-app.listen(server.port, server.host, () => {
+app.listen(server.port, () => {
   console.log(`Server is running on port ${server.port}`);
 });
 
